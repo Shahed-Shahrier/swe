@@ -7,3 +7,7 @@ Land services of Bangladesh are more often than not paper-based and requires mul
 
 1.2 Intended Audience:
 This software can be used by any eligible citizen of Bangladesh who owns lands legally. In addition, land office staffs and survey officers for verifying lands can also use this software.
+
+
+1.5 Risk Defnitions:
+Possible risks include incorrect information submission, fake documents and unauthorized system access. There may also be server downtime or data entry errors by officials. The system will include login authentication and action logs to reduce misuse. However, it is only a prototype and not a legally binding service
