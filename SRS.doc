@@ -14,5 +14,9 @@ The system will be used as an online portal for submitting and processing land r
 1.4 Product Scope
 Digi-Land will allow users to search land records, submit transfer applications and upload required documents. Officials will review applications and record decisions digitally. The system will generate application IDs and notify users about status updates. The overall goal is to create a transparent and trackable service platform.
 
+1.5 Risk Defnitions:
+Possible risks include incorrect information submission, fake documents and unauthorized system access. There may also be server downtime or data entry errors by officials. The system will include login authentication and action logs to reduce misuse. However, it is only a prototype and not a legally binding service
+
 2.5 Assumptions
 It is assumed that users have internet access and basic digital literacy. Users will upload correct and readable documents. Officials will process applications regularly. The system will be maintained by an administrator.
+
