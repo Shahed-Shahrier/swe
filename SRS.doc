@@ -7,3 +7,9 @@ Land services of Bangladesh are more often than not paper-based and requires mul
 
 1.2 Intended Audience:
 This software can be used by any eligible citizen of Bangladesh who owns lands legally. In addition, land office staffs and survey officers for verifying lands can also use this software.
+
+
+
+2.3 Operating Environment
+
+The application will run on a web browser such as Chrome or Firefox. Users will access the system through a computer or smartphone with internet connection. The server will run a backend framework and a database system. Hosting may be on a local or cloud server.
