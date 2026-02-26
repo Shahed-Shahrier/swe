@@ -16,3 +16,13 @@ Digi-Land will allow users to search land records, submit transfer applications 
 
 2.5 Assumptions
 It is assumed that users have internet access and basic digital literacy. Users will upload correct and readable documents. Officials will process applications regularly. The system will be maintained by an administrator.
+
+
+3.2 Non-Functional Requirements
+
+Performance: The system should respond to user requests within a few seconds.
+Security: Only authorized users can access restricted functions and passwords must be encrypted.
+Usability: Interface should be simple and understandable for non-technical users.
+Availability: System should be accessible most of the time except maintenance.
+Reliability: Application data should not be lost during normal operation.
+Maintainability: Code should be modular and easy to update.
