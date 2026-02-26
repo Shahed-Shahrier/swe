@@ -14,5 +14,8 @@ The system will be used as an online portal for submitting and processing land r
 1.4 Product Scope
 Digi-Land will allow users to search land records, submit transfer applications and upload required documents. Officials will review applications and record decisions digitally. The system will generate application IDs and notify users about status updates. The overall goal is to create a transparent and trackable service platform.
 
+2.4 Constraints
+The project is an academic prototype and not connected to real government databases. Identity verification will depend on uploaded documents only. Legal digital signatures are not included. System performance will depend on available hosting resources.
+
 2.5 Assumptions
 It is assumed that users have internet access and basic digital literacy. Users will upload correct and readable documents. Officials will process applications regularly. The system will be maintained by an administrator.
