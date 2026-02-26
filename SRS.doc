@@ -17,6 +17,12 @@ Digi-Land will allow users to search land records, submit transfer applications 
 1.5 Risk Defnitions:
 Possible risks include incorrect information submission, fake documents and unauthorized system access. There may also be server downtime or data entry errors by officials. The system will include login authentication and action logs to reduce misuse. However, it is only a prototype and not a legally binding service
 
+2. Overall Description
+
+2.1 User Classes and Characteristics
+Citizens are general users with basic smartphone or internet knowledge who submit applications. Land officers review documents and make decisions. Survey officers verify plot information and land details. Administrators manage users and maintain system configuration.
+
 2.5 Assumptions
 It is assumed that users have internet access and basic digital literacy. Users will upload correct and readable documents. Officials will process applications regularly. The system will be maintained by an administrator.
+
 
