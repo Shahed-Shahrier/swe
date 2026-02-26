@@ -14,6 +14,26 @@ The system will be used as an online portal for submitting and processing land r
 1.4 Product Scope
 Digi-Land will allow users to search land records, submit transfer applications and upload required documents. Officials will review applications and record decisions digitally. The system will generate application IDs and notify users about status updates. The overall goal is to create a transparent and trackable service platform.
 
+1.5 Risk Defnitions:
+Possible risks include incorrect information submission, fake documents and unauthorized system access. There may also be server downtime or data entry errors by officials. The system will include login authentication and action logs to reduce misuse. However, it is only a prototype and not a legally binding service
+
+2. Overall Description
+
+2.1 User Classes and Characteristics
+Citizens are general users with basic smartphone or internet knowledge who submit applications. Land officers review documents and make decisions. Survey officers verify plot information and land details. Administrators manage users and maintain system configuration.
+
+2.2 User Needs
+Citizens need an easy way to apply for services and check status online. They also need notifications and record access without visiting offices. Officials need an organized application list and document verification interface. The system should also maintain history for accountability.
+
+2.3 Operating Environment
+
+The application will run on a web browser such as Chrome or Firefox. Users will access the system through a computer or smartphone with internet connection. The server will run a backend framework and a database system. Hosting may be on a local or cloud server.
+
+2.4 Constraints
+The project is an academic prototype and not connected to real government databases. Identity verification will depend on uploaded documents only. Legal digital signatures are not included. System performance will depend on available hosting resources.
+
+2.5 Assumptions
+It is assumed that users have internet access and basic digital literacy. Users will upload correct and readable documents. Officials will process applications regularly. The system will be maintained by an administrator.
 
 3.1 Functional Requirements
 1) Users shall register and login into the system.
