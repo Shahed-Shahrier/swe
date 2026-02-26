@@ -46,3 +46,12 @@ It is assumed that users have internet access and basic digital literacy. Users 
 8) System shall notify users about application status.
 9) Users shall track application progress online.
 10) System shall maintain an audit history of actions.
+
+3.2 Non-Functional Requirements
+
+1) Performance: The system should respond to user requests within a few seconds.
+2) Security: Only authorized users can access restricted functions and passwords must be encrypted.
+3) Usability: Interface should be simple and understandable for non-technical users.
+4) Availability: System should be accessible most of the time except maintenance.
+5) Reliability: Application data should not be lost during normal operation.
+6) Maintainability: Code should be modular and easy to update.
