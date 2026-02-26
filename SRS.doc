@@ -22,6 +22,9 @@ Possible risks include incorrect information submission, fake documents and unau
 2.1 User Classes and Characteristics
 Citizens are general users with basic smartphone or internet knowledge who submit applications. Land officers review documents and make decisions. Survey officers verify plot information and land details. Administrators manage users and maintain system configuration.
 
+2.2 User Needs
+Citizens need an easy way to apply for services and check status online. They also need notifications and record access without visiting offices. Officials need an organized application list and document verification interface. The system should also maintain history for accountability.
+
 2.5 Assumptions
 It is assumed that users have internet access and basic digital literacy. Users will upload correct and readable documents. Officials will process applications regularly. The system will be maintained by an administrator.
 
