@@ -29,6 +29,9 @@ Citizens need an easy way to apply for services and check status online. They al
 
 The application will run on a web browser such as Chrome or Firefox. Users will access the system through a computer or smartphone with internet connection. The server will run a backend framework and a database system. Hosting may be on a local or cloud server.
 
+2.4 Constraints
+The project is an academic prototype and not connected to real government databases. Identity verification will depend on uploaded documents only. Legal digital signatures are not included. System performance will depend on available hosting resources.
+
 2.5 Assumptions
 It is assumed that users have internet access and basic digital literacy. Users will upload correct and readable documents. Officials will process applications regularly. The system will be maintained by an administrator.
 
