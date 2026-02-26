@@ -35,4 +35,14 @@ The project is an academic prototype and not connected to real government databa
 2.5 Assumptions
 It is assumed that users have internet access and basic digital literacy. Users will upload correct and readable documents. Officials will process applications regularly. The system will be maintained by an administrator.
 
-
+3.1 Functional Requirements
+1) Users shall register and login into the system.
+2) Users shall search land information using plot or holding number.
+3) Users shall submit ownership transfer applications.
+4) Users shall upload necessary documents for verification.
+5) Officers shall review applications and request clarification if needed.
+6) Survey officers shall verify land details.
+7) Officers shall approve or reject applications.
+8) System shall notify users about application status.
+9) Users shall track application progress online.
+10) System shall maintain an audit history of actions.
