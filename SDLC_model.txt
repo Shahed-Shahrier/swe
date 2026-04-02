@@ -23,6 +23,6 @@ Model Table: (out of 35)
 | Agile           | 20               |
 | Prototype       | 12               |
 | V-Shape         | 28               |
-| Incremental     | 31 (Highest)     |
+| Incremental     | 35 (Highest)     |
 
 
