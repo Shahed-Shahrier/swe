@@ -18,11 +18,11 @@ Model Table: (out of 35)
 | Model           | Score            |
 | --------------- | ---------------- |
 | Waterfall       | 18               |
-| Iterative       | 27               |
+| Iterative       | 30               |
 | Spiral          | 28               |
 | Agile           | 20               |
-| Prototype       | 16               |
-| V-Shape         | 29               |
+| Prototype       | 12               |
+| V-Shape         | 28               |
 | Incremental     | 31 (Highest)     |
 
 
