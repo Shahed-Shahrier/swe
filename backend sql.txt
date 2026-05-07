@@ -1,0 +1,265 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.addresses (
+  address_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  user_id bigint NOT NULL,
+  division text NOT NULL,
+  district text NOT NULL,
+  upazila text,
+  union_name text,
+  village text,
+  postal_code text,
+  address_type USER-DEFINED NOT NULL DEFAULT 'present'::address_type_enum,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT addresses_pkey PRIMARY KEY (address_id),
+  CONSTRAINT addresses_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.application_new_owners (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  application_id bigint NOT NULL,
+  user_id bigint NOT NULL,
+  ownership_percentage numeric NOT NULL CHECK (ownership_percentage > 0::numeric AND ownership_percentage <= 100::numeric),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT application_new_owners_pkey PRIMARY KEY (id),
+  CONSTRAINT application_new_owners_application_id_fkey FOREIGN KEY (application_id) REFERENCES public.applications(application_id),
+  CONSTRAINT application_new_owners_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.application_status_history (
+  history_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  application_id bigint NOT NULL,
+  old_status USER-DEFINED,
+  new_status USER-DEFINED NOT NULL,
+  changed_by bigint,
+  changed_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT application_status_history_pkey PRIMARY KEY (history_id),
+  CONSTRAINT application_status_history_application_id_fkey FOREIGN KEY (application_id) REFERENCES public.applications(application_id),
+  CONSTRAINT application_status_history_changed_by_fkey FOREIGN KEY (changed_by) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.applications (
+  application_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  application_number text NOT NULL UNIQUE,
+  applicant_user_id bigint NOT NULL,
+  land_id bigint NOT NULL,
+  transfer_type USER-DEFINED NOT NULL,
+  fee_amount numeric NOT NULL DEFAULT 0 CHECK (fee_amount >= 0::numeric),
+  payment_status USER-DEFINED NOT NULL DEFAULT 'unpaid'::payment_status_enum,
+  current_status USER-DEFINED NOT NULL DEFAULT 'draft'::application_status_enum,
+  assigned_admin_id bigint,
+  assigned_survey_officer_id bigint,
+  submitted_at timestamp with time zone,
+  approved_at timestamp with time zone,
+  rejected_at timestamp with time zone,
+  cancellation_reason text,
+  rejection_reason text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT applications_pkey PRIMARY KEY (application_id),
+  CONSTRAINT applications_applicant_user_id_fkey FOREIGN KEY (applicant_user_id) REFERENCES public.users(user_id),
+  CONSTRAINT applications_land_id_fkey FOREIGN KEY (land_id) REFERENCES public.land_parcels(land_id),
+  CONSTRAINT applications_assigned_admin_id_fkey FOREIGN KEY (assigned_admin_id) REFERENCES public.users(user_id),
+  CONSTRAINT applications_assigned_survey_officer_id_fkey FOREIGN KEY (assigned_survey_officer_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.audit_logs (
+  log_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  actor_user_id bigint,
+  action_type text NOT NULL,
+  target_table text NOT NULL,
+  target_id bigint,
+  old_values jsonb,
+  new_values jsonb,
+  ip_address inet,
+  user_agent text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT audit_logs_pkey PRIMARY KEY (log_id),
+  CONSTRAINT audit_logs_actor_user_id_fkey FOREIGN KEY (actor_user_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.clarifications (
+  clarification_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  application_id bigint NOT NULL,
+  requested_by bigint NOT NULL,
+  request_message text NOT NULL,
+  responded_by bigint,
+  response_message text,
+  status USER-DEFINED NOT NULL DEFAULT 'open'::clarification_status_enum,
+  requested_at timestamp with time zone NOT NULL DEFAULT now(),
+  responded_at timestamp with time zone,
+  CONSTRAINT clarifications_pkey PRIMARY KEY (clarification_id),
+  CONSTRAINT clarifications_application_id_fkey FOREIGN KEY (application_id) REFERENCES public.applications(application_id),
+  CONSTRAINT clarifications_requested_by_fkey FOREIGN KEY (requested_by) REFERENCES public.users(user_id),
+  CONSTRAINT clarifications_responded_by_fkey FOREIGN KEY (responded_by) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.decisions (
+  decision_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  application_id bigint NOT NULL,
+  decided_by bigint NOT NULL,
+  decision_type USER-DEFINED NOT NULL,
+  reason text,
+  reference_no text UNIQUE,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT decisions_pkey PRIMARY KEY (decision_id),
+  CONSTRAINT decisions_application_id_fkey FOREIGN KEY (application_id) REFERENCES public.applications(application_id),
+  CONSTRAINT decisions_decided_by_fkey FOREIGN KEY (decided_by) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.documents (
+  document_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  application_id bigint NOT NULL,
+  user_id bigint NOT NULL,
+  land_id bigint NOT NULL,
+  document_type USER-DEFINED NOT NULL,
+  file_name text NOT NULL,
+  file_path text NOT NULL,
+  mime_type text,
+  file_size bigint CHECK (file_size IS NULL OR file_size >= 0),
+  version_no integer NOT NULL DEFAULT 1 CHECK (version_no >= 1),
+  verification_status USER-DEFINED NOT NULL DEFAULT 'pending'::document_verification_status_enum,
+  reviewed_by bigint,
+  uploaded_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT documents_pkey PRIMARY KEY (document_id),
+  CONSTRAINT documents_application_id_fkey FOREIGN KEY (application_id) REFERENCES public.applications(application_id),
+  CONSTRAINT documents_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id),
+  CONSTRAINT documents_land_id_fkey FOREIGN KEY (land_id) REFERENCES public.land_parcels(land_id),
+  CONSTRAINT documents_reviewed_by_fkey FOREIGN KEY (reviewed_by) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.land_owners (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  land_id bigint NOT NULL,
+  user_id bigint NOT NULL,
+  ownership_percentage numeric NOT NULL CHECK (ownership_percentage > 0::numeric AND ownership_percentage <= 100::numeric),
+  ownership_source text,
+  start_date date NOT NULL DEFAULT CURRENT_DATE,
+  end_date date,
+  is_current_owner boolean NOT NULL DEFAULT true,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT land_owners_pkey PRIMARY KEY (id),
+  CONSTRAINT land_owners_land_id_fkey FOREIGN KEY (land_id) REFERENCES public.land_parcels(land_id),
+  CONSTRAINT land_owners_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.land_parcels (
+  land_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  plot_number text NOT NULL,
+  holding_number text,
+  khatian_number text NOT NULL,
+  mouza text NOT NULL,
+  division text NOT NULL,
+  district text NOT NULL,
+  upazila text NOT NULL,
+  union_name text,
+  village text,
+  area_size numeric NOT NULL CHECK (area_size > 0::numeric),
+  land_type USER-DEFINED NOT NULL DEFAULT 'other'::land_type_enum,
+  latitude numeric CHECK (latitude IS NULL OR latitude >= '-90'::integer::numeric AND latitude <= 90::numeric),
+  longitude numeric CHECK (longitude IS NULL OR longitude >= '-180'::integer::numeric AND longitude <= 180::numeric),
+  ownership_status USER-DEFINED NOT NULL DEFAULT 'unknown'::land_ownership_status_enum,
+  current_status USER-DEFINED NOT NULL DEFAULT 'active'::land_current_status_enum,
+  legal_remarks text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT land_parcels_pkey PRIMARY KEY (land_id)
+);
+CREATE TABLE public.notifications (
+  notification_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  recipient_user_id bigint NOT NULL,
+  title text NOT NULL,
+  message text NOT NULL,
+  type USER-DEFINED NOT NULL DEFAULT 'system'::notification_type_enum,
+  deep_link text,
+  is_read boolean NOT NULL DEFAULT false,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT notifications_pkey PRIMARY KEY (notification_id),
+  CONSTRAINT notifications_recipient_user_id_fkey FOREIGN KEY (recipient_user_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.payments (
+  payment_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  application_id bigint NOT NULL,
+  amount numeric NOT NULL CHECK (amount >= 0::numeric),
+  currency text NOT NULL DEFAULT 'BDT'::text,
+  provider text,
+  transaction_reference text UNIQUE,
+  status USER-DEFINED NOT NULL DEFAULT 'pending'::payment_status_enum,
+  paid_at timestamp with time zone,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT payments_pkey PRIMARY KEY (payment_id),
+  CONSTRAINT payments_application_id_fkey FOREIGN KEY (application_id) REFERENCES public.applications(application_id)
+);
+CREATE TABLE public.permissions (
+  permission_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  permission_name text NOT NULL UNIQUE,
+  CONSTRAINT permissions_pkey PRIMARY KEY (permission_id)
+);
+CREATE TABLE public.reviews (
+  review_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  application_id bigint NOT NULL,
+  reviewer_id bigint NOT NULL,
+  note text,
+  review_type USER-DEFINED NOT NULL DEFAULT 'admin'::review_type_enum,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT reviews_pkey PRIMARY KEY (review_id),
+  CONSTRAINT reviews_application_id_fkey FOREIGN KEY (application_id) REFERENCES public.applications(application_id),
+  CONSTRAINT reviews_reviewer_id_fkey FOREIGN KEY (reviewer_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.role_permissions (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  role_id bigint NOT NULL,
+  permission_id bigint NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT role_permissions_pkey PRIMARY KEY (id),
+  CONSTRAINT role_permissions_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(role_id),
+  CONSTRAINT role_permissions_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES public.permissions(permission_id)
+);
+CREATE TABLE public.roles (
+  role_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  role_name text NOT NULL UNIQUE,
+  CONSTRAINT roles_pkey PRIMARY KEY (role_id)
+);
+CREATE TABLE public.system_settings (
+  setting_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  setting_key text NOT NULL UNIQUE,
+  setting_value text,
+  updated_by bigint,
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT system_settings_pkey PRIMARY KEY (setting_id),
+  CONSTRAINT system_settings_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.user_roles (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  user_id bigint NOT NULL,
+  role_id bigint NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT user_roles_pkey PRIMARY KEY (id),
+  CONSTRAINT user_roles_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id),
+  CONSTRAINT user_roles_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(role_id)
+);
+CREATE TABLE public.users (
+  user_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  full_name text NOT NULL,
+  email USER-DEFINED NOT NULL UNIQUE,
+  phone text UNIQUE CHECK (phone IS NULL OR length(phone) >= 7),
+  password_hash text,
+  nid_number text UNIQUE,
+  profile_image text,
+  date_of_birth date CHECK (date_of_birth IS NULL OR date_of_birth <= CURRENT_DATE),
+  gender USER-DEFINED,
+  status USER-DEFINED NOT NULL DEFAULT 'pending'::user_status,
+  email_verified boolean NOT NULL DEFAULT false,
+  phone_verified boolean NOT NULL DEFAULT false,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  deleted_at timestamp with time zone,
+  CONSTRAINT users_pkey PRIMARY KEY (user_id)
+);
+CREATE TABLE public.verifications (
+  verification_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  application_id bigint NOT NULL,
+  land_id bigint NOT NULL,
+  survey_officer_id bigint NOT NULL,
+  visit_date date,
+  geo_verified boolean NOT NULL DEFAULT false,
+  result USER-DEFINED NOT NULL DEFAULT 'pending'::verification_result_enum,
+  notes text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT verifications_pkey PRIMARY KEY (verification_id),
+  CONSTRAINT verifications_application_id_fkey FOREIGN KEY (application_id) REFERENCES public.applications(application_id),
+  CONSTRAINT verifications_land_id_fkey FOREIGN KEY (land_id) REFERENCES public.land_parcels(land_id),
+  CONSTRAINT verifications_survey_officer_id_fkey FOREIGN KEY (survey_officer_id) REFERENCES public.users(user_id)
+);
