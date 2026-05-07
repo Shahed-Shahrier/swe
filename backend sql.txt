@@ -221,6 +221,24 @@ CREATE TABLE public.system_settings (
   CONSTRAINT system_settings_pkey PRIMARY KEY (setting_id),
   CONSTRAINT system_settings_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(user_id)
 );
+CREATE TABLE public.user_land_records (
+  user_land_record_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  user_id bigint NOT NULL,
+  land_id bigint NOT NULL,
+  verified_by bigint,
+  record_source USER-DEFINED NOT NULL DEFAULT 'manual_entry'::land_record_source_enum,
+  record_status USER-DEFINED NOT NULL DEFAULT 'pending_verification'::land_record_status_enum,
+  ownership_claim_note text,
+  verification_note text,
+  registered_at timestamp with time zone NOT NULL DEFAULT now(),
+  verified_at timestamp with time zone,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT user_land_records_pkey PRIMARY KEY (user_land_record_id),
+  CONSTRAINT user_land_records_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id),
+  CONSTRAINT user_land_records_land_id_fkey FOREIGN KEY (land_id) REFERENCES public.land_parcels(land_id),
+  CONSTRAINT user_land_records_verified_by_fkey FOREIGN KEY (verified_by) REFERENCES public.users(user_id)
+);
 CREATE TABLE public.user_roles (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   user_id bigint NOT NULL,
